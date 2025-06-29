@@ -1,9 +1,10 @@
 import { ButtonSubmit } from '@/components/Button';
 import { InputForm } from '@/components/Input'
+import Link from 'next/link';
 import React, { useState } from 'react'
 import { FaPhone, FaLock  } from "react-icons/fa6";
 
-function index() {
+function Login() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -31,9 +32,13 @@ function index() {
             <ButtonSubmit
               styles='cursor-pointer bg-[var(--blue1)] hover:bg-[var(--blue2)] py-2 rounded-sm text-[var(--white)] font-bold'
             />
+            <p className='text-sm'>
+                No have account? <Link href="/auth/register" className="text-[var(--blue1)] underline">Register</Link>
+            </p>
+
         </form>
     </div>
   )
 }
 
-export default index;
+export default Login;
