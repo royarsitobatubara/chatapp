@@ -1,0 +1,10 @@
+CREATE TABLE users (
+  iduser INT AUTO_INCREMENT PRIMARY KEY,
+  phone VARCHAR(20) UNIQUE NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  photo VARCHAR(255) NULL,
+  bio VARCHAR(100) NULL,
+  role ENUM('user', 'admin') DEFAULT 'user',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

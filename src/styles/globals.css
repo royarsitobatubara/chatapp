@@ -9,3 +9,8 @@
   --blue1: #1E90FF;
   --blue2: #187bcd;
 }
+
+body{
+  background-color: var(--black1);
+  color: var(--white);
+}

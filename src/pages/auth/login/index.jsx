@@ -1,6 +1,8 @@
 import { ButtonSubmit } from '@/components/Button';
 import { InputForm } from '@/components/Input'
+import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react'
 import { FaPhone, FaLock  } from "react-icons/fa6";
 
@@ -8,6 +10,27 @@ function Login() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const router = useRouter();
+
+  async function LoginHandler(e){
+    e.preventDefault();
+    try {
+      const res = await axios.post('/api/auth/login', {
+        phone: phone,
+        password: password
+      });
+      const data = res.data;
+      setMessage(data.message);
+      localStorage.setItem('token', data.token)
+      router.push('/');
+    } catch (error) {
+      if(error.response && error.response.data.message){
+        setMessage(error.response.data.message);
+      }else{
+        setMessage("Something went wrong");
+      }
+    }
+  }
 
   return (
     <div className='bg-[var(--black1)] h-dvh w-full text-[var(--white)] flex items-center justify-center '>
@@ -30,6 +53,7 @@ function Login() {
             />
             {message && <p className='text-red-400 text-sm font-extralight '>*{message}</p>}
             <ButtonSubmit
+              handleClick={LoginHandler}
               styles='cursor-pointer bg-[var(--blue1)] hover:bg-[var(--blue2)] py-2 rounded-sm text-[var(--white)] font-bold'
             />
             <p className='text-sm'>

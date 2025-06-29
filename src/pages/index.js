@@ -1,9 +1,13 @@
-import React from 'react';
+// pages/index.js
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-function Home() {
-  return (
-    <div>Home</div>
-  )
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/chat'); 
+  }, []);
+
+  return null;
 }
-
-export default Home;
