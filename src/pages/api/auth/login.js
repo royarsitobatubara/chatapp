@@ -22,8 +22,10 @@
       const token = jwt.sign(
         {
           id: user.iduser,
-          username: user.username,
-          phone: user.phone
+          name: user.name,
+          phone: user.phone,
+          role: user.role,
+          profile: user.profile
         },
         process.env.JWT_SECRET,
         {expiresIn: '5d'}

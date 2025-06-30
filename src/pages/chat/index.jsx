@@ -1,22 +1,29 @@
 import Profile from '@/components/Profile';
 import SearchingUser from '@/components/SearchingUser';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import SettingsProfile from './SettingsProfile';
 
 
 function Chat() {
+
+  const [isSetting, setViewSetting] = useState(false);
   
   return (
-    <div className='grid grid-cols-7 h-dvh'>
+    <div className='grid grid-cols-7 h-dvh relative '>
 
-      <div className='bg-[var(--black2)] px-5 col-span-2 flex flex-col gap-2'>
-        <Profile />
+      {/* LEFT */}
+      <div className='bg-[var(--black2)] col-span-2 flex flex-col gap-2'>
+        <Profile handleSetting={setViewSetting}/>
         <SearchingUser />
       </div>
 
-      <div>
+      {/* RIGHT */}
+      <div></div>
 
-      </div>
+
+      {/* SETTING */}
+      {isSetting && <SettingsProfile handleCloseProfile={()=>setViewSetting(false)} /> }
     </div>
   )
 }

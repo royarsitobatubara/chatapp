@@ -28,3 +28,11 @@ export function InputForm({
     </div>
   );
 }
+
+export function InputSettingProfile(){
+  return(
+    <div>
+      
+    </div>
+  );
+}

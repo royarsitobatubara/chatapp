@@ -13,7 +13,6 @@ export default function App({ Component, pageProps }) {
     const isPublic = publicRoutes.includes(router.pathname);
 
     if (!token) {
-      // Tidak ada token, hanya boleh akses halaman public
       if (!isPublic) {
         router.replace('/auth/login');
       }

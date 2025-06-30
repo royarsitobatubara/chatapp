@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa";
 
 function SearchingUser() {
   return (
-    <div className='flex items-center gap-3 justify-between'>
+    <div className='flex items-center gap-3 justify-between px-5'>
         <div className='flex w-full items-center gap-2 bg-[var(--black3)] px-4 py-1 rounded-full'>
             <IoSearch />
             <input 
