@@ -1,9 +1,8 @@
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BiDotsVertical } from "react-icons/bi";
 import { useRouter } from 'next/router';
 import { RiCloseLargeLine } from "react-icons/ri";
-import { jwtDecode } from 'jwt-decode';
 
 function Profile({ handleSetting = null, user=null }) {
   const [isView, setView] = useState(false);
@@ -15,7 +14,7 @@ function Profile({ handleSetting = null, user=null }) {
     router.replace('/auth/login');
   }
   return (
-    <div className='relative flex items-center px-5 justify-between'>
+    <div className='relative flex items-center px-5 py-3 justify-between'>
       <div className='flex items-center py-2 gap-2'>
         <Image
           src={user?.photo ? user?.photo : '/images/avatar.jpeg'}

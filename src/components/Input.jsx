@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { RiEdit2Fill } from "react-icons/ri";
+import { FaUser } from "react-icons/fa6";
 
 export function InputForm({
   name = '',
@@ -89,6 +90,26 @@ export function InputSettingProfile({
             <RiEdit2Fill />
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+export function InputAddContact({name='', value=null, handleChange=null, placeholder='', Icon=null}){
+  return(
+    <div className="flex flex-col">
+      <label htmlFor={name} className="text-sm font-extralight">{name}</label>
+      <div className="flex items-center px-2 gap-2 py-1 bg-[var(--black2)] rounded-sm">
+        {Icon && <Icon />}
+        <input 
+          type="text" 
+          name={name} 
+          id={name} 
+          value={value} 
+          onChange={handleChange}
+          placeholder={placeholder}
+          className="outline-none border-none "
+        />
       </div>
     </div>
   );

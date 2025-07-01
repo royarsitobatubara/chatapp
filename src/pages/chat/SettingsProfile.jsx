@@ -145,7 +145,7 @@ function SettingsProfile({ handleCloseProfile, iduser = '', refreshData=null }) 
             name={'phone'}
             handleChange={handleInput}
             placeholder={dataUser.phone}
-            isCanChange={true}
+            isCanChange={false}
           />
           <InputSettingProfile
             value={dataUser.password}

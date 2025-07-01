@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import UserList from '@/components/UserList';
 import axios from 'axios';
 import AddContact from './AddContact';
+import ChatUser from './ChatUser';
 
 function Chat() {
   const [isSetting, setViewSetting] = useState(false);
@@ -75,9 +76,11 @@ function Chat() {
       </div>
 
       {/* RIGHT */}
-      <div className='col-span-5'></div>
+      <div className='col-span-5 w-full'>
+        <ChatUser />
+      </div>
 
-      {isAddContact && <AddContact />}
+      {isAddContact && <AddContact handleClose={()=>setViewAddContact(e=>!e)} phone={user?.phone} />}
     </div>
   );
 }
