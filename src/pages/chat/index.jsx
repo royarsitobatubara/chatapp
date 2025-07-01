@@ -94,6 +94,8 @@ function Chat() {
           ? <ChatUser 
               photo={dataUserList.photo}
               name={dataUserList.name}
+              pengirim={user.phone}
+              penerima={dataUserList.phone}
             />
           : <div className='flex w-full h-dvh items-center justify-center'>
               <h1 className='font-bold'>No have Acction</h1>

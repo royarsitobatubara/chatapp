@@ -8,3 +8,13 @@ CREATE TABLE users (
   role ENUM('user', 'admin') DEFAULT 'user',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE chat (
+  idchat INT AUTO_INCREMENT PRIMARY KEY,
+  pengirim VARCHAR(50),
+  penerima VARCHAR(50),
+  pesan TEXT,
+  tipe ENUM('text', 'image') DEFAULT 'text',
+  waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('unread', 'read') DEFAULT 'unread'
+);
