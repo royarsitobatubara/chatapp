@@ -13,7 +13,11 @@ function Chat() {
   const [isAddContact, setViewAddContact] = useState(false);
   const [user, setUser] = useState(null);
   const [userList, setUserList] = useState([]);
-
+  const [dataUserList, setDataUserList] = useState({
+    phone: null,
+    name: null,
+    photo: null
+  });
 
   function getData() {
     const token = localStorage.getItem('token');
@@ -25,6 +29,14 @@ function Chat() {
         console.error('Token tidak valid:', err);
       }
     }
+  }
+
+  const handleClickUserList = (phone, photo, name) =>{
+    setDataUserList({
+      phone: phone,
+      photo: photo,
+      name: name || phone
+    });
   }
 
   const getUserList =async(phone)=>{
@@ -60,7 +72,8 @@ function Chat() {
                 key={idx}
                 name={item.name}
                 phone={item.phone}
-                avatar={item.photo}  
+                avatar={item.photo}
+                handleClick={handleClickUserList}
               />
             ))}
           </div>
@@ -77,7 +90,15 @@ function Chat() {
 
       {/* RIGHT */}
       <div className='col-span-5 w-full'>
-        <ChatUser />
+        {dataUserList.phone
+          ? <ChatUser 
+              photo={dataUserList.photo}
+              name={dataUserList.name}
+            />
+          : <div className='flex w-full h-dvh items-center justify-center'>
+              <h1 className='font-bold'>No have Acction</h1>
+            </div> 
+        }
       </div>
 
       {isAddContact && <AddContact handleClose={()=>setViewAddContact(e=>!e)} phone={user?.phone} />}

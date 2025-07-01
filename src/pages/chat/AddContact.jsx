@@ -33,7 +33,7 @@ function AddContact({ handleClose = null, phone = null }) {
         name: dataContact.name
       });
       setMessage(response.data.message);
-      setDataContact({ name: '', phone: '' }); // reset form jika berhasil
+      setDataContact({ name: '', phone: '' }); 
     } catch (error) {
       setMessage(error?.response?.data?.message || 'Something went wrong');
     }
