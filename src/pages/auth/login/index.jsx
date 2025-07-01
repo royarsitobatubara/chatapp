@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { FaPhone, FaLock } from "react-icons/fa6";
-import { useUser } from '@/context/UserContext';
 import { jwtDecode } from 'jwt-decode';
 
 function Login() {
@@ -13,7 +12,6 @@ function Login() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const router = useRouter();
-  const { setUser } = useUser(); // ⬅️ akses context
 
   async function LoginHandler(e) {
     e.preventDefault();
@@ -28,8 +26,7 @@ function Login() {
 
       if (data.token) {
         localStorage.setItem('token', data.token);
-        const decoded = jwtDecode(data.token); // ⬅️ ambil data user dari token
-        setUser(decoded); // ⬅️ simpan ke context
+        const decoded = jwtDecode(data.token);
 
         router.push('/');
       }

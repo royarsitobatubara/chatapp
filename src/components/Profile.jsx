@@ -14,12 +14,11 @@ function Profile({ handleSetting = null, user=null }) {
     localStorage.removeItem('token');
     router.replace('/auth/login');
   }
-
   return (
     <div className='relative flex items-center px-5 justify-between'>
       <div className='flex items-center py-2 gap-2'>
         <Image
-          src={user?.photo || '/images/avatar.jpeg'}
+          src={user?.photo ? user?.photo : '/images/avatar.jpeg'}
           width={40}
           height={40}
           alt='avatar'

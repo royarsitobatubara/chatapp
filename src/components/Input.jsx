@@ -33,10 +33,10 @@ export function InputForm({
 }
 
 export function InputSettingProfile({
-  label = '',
+  name='',
   placeholder = '',
-  value = '',
-  handleChange = () => {},
+  value = null,
+  handleChange=null,
   isCanChange = true,
   isTextArea = false
 }) {
@@ -48,18 +48,19 @@ export function InputSettingProfile({
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={label} className="text-sm pl-2 font-extralight">
-        {label}
+      <label htmlFor={name} className="text-sm pl-2 font-extralight">
+        {name}
       </label>
       <div className="flex gap-2">
         {isTextArea ? (
           <textarea
-            id={label}
+            id={name}
             disabled={!isEdit}
             value={value}
             onChange={handleChange}
             placeholder={placeholder}
             maxLength={100}
+            name={name}
             className={`w-full rounded-md px-3 py-1 outline-none border-none resize-none ${
               isEdit ? "bg-[var(--black2)]" : ""
             }`}
@@ -68,9 +69,10 @@ export function InputSettingProfile({
         ) : (
           <input
             type="text"
-            id={label}
+            id={name}
             disabled={!isEdit}
             value={value}
+            name={name}
             onChange={handleChange}
             placeholder={placeholder}
             className={`w-full rounded-md px-3 py-1 outline-none border-none ${

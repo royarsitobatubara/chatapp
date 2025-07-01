@@ -2,65 +2,61 @@ import { InputSettingProfile } from '@/components/Input';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { RiCloseLargeLine } from 'react-icons/ri';
-import { jwtDecode } from 'jwt-decode';
 import { ButtonSubmit } from '@/components/Button';
 import axios from 'axios';
 
-function SettingsProfile({ handleCloseProfile, refreshData=null }) {
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [bio, setBio] = useState('');
-  const [phone, setPhone] = useState('');
-  const [photo, setPhoto] = useState('');
-  const [message, setMessage] = useState('');
-  const [preview, setPreview] = useState('');
-  const [id, setID] = useState(null);
+function SettingsProfile({ handleCloseProfile, iduser = '', refreshData=null }) {
+  const [dataUser, setDataUser] = useState({
+    name: '',
+    phone: '',
+    bio: '',
+    password: '',
+    photo: null,
+    createAt: null
+  });
+  const [photoFile, setPhotoFile] = useState(null);
   const fileInputRef = useRef(null);
+  const [message, setMessage] = useState('');
+  const [preview, setPreview] = useState(null);
 
-  // Ambil ID user dari token saat pertama kali
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setID(decoded.iduser);
-      } catch (err) {
-        console.error('Token tidak valid:', err);
-      }
-    }
-  }, []);
-
-  // Ambil data user dari server berdasarkan id
-  const getData = async () => {
-    if (!id) return;
+  const getDataUser = async () => {
     try {
-      const res = await axios.get(`/api/users/${id}`);
-      const data = res.data;
-      setName(data.name || '');
-      setPhone(data.phone || '');
-      setBio(data.bio || '');
-      setPhoto(data.photo || '');
+      const response = await axios.get(`/api/users/${iduser}`);
+      const data = response.data;
+      if (data?.datas) {
+        const user = data.datas;
+        setDataUser({
+          name: user.name,
+          phone: user.phone,
+          bio: user.bio,
+          password: user.password,
+          photo: user.photo,
+          createAt: user.created_at
+        });
+      }
     } catch (error) {
-      console.error('Gagal ambil data user:', error);
+      setMessage(error.response?.data.message || error.message);
     }
   };
 
   useEffect(() => {
-    if (id) getData();
-  }, [id]);
+    if (iduser) getDataUser();
+  }, [iduser]);
 
-  useEffect(() => {
-    if (message) {
-      const timeout = setTimeout(() => setMessage(''), 3000);
-      return () => clearTimeout(timeout);
-    }
-  }, [message]);
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setDataUser({
+      ...dataUser,
+      [name]: value
+    });
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const url = URL.createObjectURL(file);
       setPreview(url);
+      setPhotoFile(file);
     }
   };
 
@@ -70,34 +66,28 @@ function SettingsProfile({ handleCloseProfile, refreshData=null }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!id) return;
-
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('bio', bio);
-    formData.append('password', password);
-    formData.append('phone', phone);
-    if (fileInputRef.current?.files[0]) {
-      formData.append('photo', fileInputRef.current.files[0]);
-    }
-
     try {
-      const res = await axios.patch(`/api/users/${id}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
-      const data = res.data;
-      setMessage(data.message || 'Berhasil diperbarui');
-
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        getData(); // ambil data ulang
-        setPreview('');
-        refreshData();
+      const formData = new FormData();
+      formData.append('name', dataUser.name);
+      formData.append('bio', dataUser.bio);
+      formData.append('password', dataUser.password);
+      formData.append('phone', dataUser.phone);
+      if (photoFile) {
+        formData.append('photo', photoFile);
       }
-    } catch (err) {
-      console.error(err);
-      setMessage('Terjadi kesalahan saat menyimpan');
+      
+      const response = await axios.patch(`/api/users/${iduser}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      localStorage.removeItem('token');
+      localStorage.setItem('token', response.data.token);
+      setMessage(response.data.message || 'Berhasil diperbarui');
+      getDataUser();
+      refreshData();
+    } catch (error) {
+      setMessage(error.response?.data?.message || error.message);
     }
   };
 
@@ -105,7 +95,7 @@ function SettingsProfile({ handleCloseProfile, refreshData=null }) {
     <div className="absolute w-[80%] bottom-0 h-full overflow-hidden shadow-xl rounded-sm">
       <form
         onSubmit={handleSubmit}
-        className="slideUp rounded-r-lg h-full bg-[var(--black3)] px-4 py-4 flex flex-col justify-between gap-2"
+        className="slideUp rounded-r-lg h-full bg-[var(--black3)] px-4 py-4 flex flex-col justify-between gap-3"
       >
         <div className="flex items-center justify-between pt-2 pb-4 w-full">
           <h3 className="text-lg font-semibold">Setting</h3>
@@ -120,7 +110,7 @@ function SettingsProfile({ handleCloseProfile, refreshData=null }) {
 
         <div className="flex flex-col items-center">
           <Image
-            src={preview || photo || '/images/avatar.jpeg'}
+            src={preview || dataUser.photo || '/images/avatar.jpeg'}
             width={80}
             height={80}
             alt="avatar"
@@ -142,40 +132,40 @@ function SettingsProfile({ handleCloseProfile, refreshData=null }) {
           />
         </div>
 
-        <div className="flex flex-col gap-2">
+        {/* INPUTAN */}
+        <div className="flex flex-col">
           <InputSettingProfile
-            label="Name"
-            placeholder="Masukkan nama"
-            value={name}
-            handleChange={(e) => setName(e.target.value)}
+            value={dataUser.name}
+            name={'name'}
+            handleChange={handleInput}
+            placeholder={dataUser.name}
           />
           <InputSettingProfile
-            label="Phone"
-            placeholder="Nomor telepon"
-            value={phone}
-            isCanChange={false}
-            handleChange={(e) => setPhone(e.target.value)}
+            value={dataUser.phone}
+            name={'phone'}
+            handleChange={handleInput}
+            placeholder={dataUser.phone}
+            isCanChange={true}
           />
           <InputSettingProfile
-            label="Password"
-            placeholder="Password"
-            value={password}
-            handleChange={(e) => setPassword(e.target.value)}
+            value={dataUser.password}
+            name={'password'}
+            handleChange={handleInput}
+            placeholder={dataUser.password}
           />
           <InputSettingProfile
-            label="Bio"
-            placeholder="Bio"
-            value={bio}
-            handleChange={(e) => setBio(e.target.value)}
+            value={dataUser.bio}
+            name={'bio'}
+            handleChange={handleInput}
+            placeholder={dataUser.bio}
             isTextArea={true}
           />
         </div>
 
-        {message && <p className="text-center text-sm text-green-400">{message}</p>}
+        {/* BUTTON + MESSAGE */}
+        {message && <p className="text-sm text-red-400">{message}</p>}
         <ButtonSubmit
-          type="submit"
-          handleClick={handleSubmit}
-          styles="bg-[var(--blue1)] w-full rounded-sm py-1 font-bold cursor-pointer text-sm"
+          styles="bg-[var(--blue1)] py-1 font-semibold rounded-sm hover:bg-[var(--blue2)] cursor-pointer"
         />
       </form>
     </div>

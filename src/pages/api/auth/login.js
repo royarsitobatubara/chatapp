@@ -25,7 +25,7 @@
           name: user.name,
           phone: user.phone,
           role: user.role,
-          profile: user.photo
+          photo: user.photo
         },
         process.env.JWT_SECRET,
         {expiresIn: '5d'}
